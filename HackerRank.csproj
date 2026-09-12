@@ -8,9 +8,5 @@
        <PackageReference Include="NUnit" />
        <PackageReference Include="NUnit3TestAdapter" />
      </ItemGroup>
-
-     <ItemGroup>
-       <Folder Include="Prepare\Database\" />
-     </ItemGroup>
 	 	 
    </Project>
