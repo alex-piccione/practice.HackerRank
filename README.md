@@ -2,6 +2,8 @@
 
 https://www.hackerrank.com  
 
+[![Run Tests](https://github.com/alex-piccione/practice.HackerRank/actions/workflows/run_tests.yml/badge.svg)](https://github.com/alex-piccione/practice.HackerRank/actions/workflows/run_tests.yml)
+
 ## KATA
 
 ### SkyScanner
