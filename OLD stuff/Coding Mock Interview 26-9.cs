@@ -67,7 +67,7 @@ Any "g" character at positions 3, 4, or 5 can be deleted to obtain str2. Return
         [TestCase("mmgghh", "mfggh", new int[] { -1 })]
         public void Test(string str1, string str2, int[] indexes)
         {
-            var result = Coding_Mock_Interview_26.GetRemovableIndices(str1, str2);
+            var result = Coding_Mock_Interview_26_9.GetRemovableIndices(str1, str2);
 
             Assert.AreEqual(indexes, result);
         }
