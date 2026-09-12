@@ -22,4 +22,4 @@ jobs:
         run: dotnet build HackerRank.slnx --no-restore
 
       - name: Test
-        run: dotnet testHackerRank.slnx --no-build --logger trx
+        run: dotnet test HackerRank.slnx --no-build --logger trx
