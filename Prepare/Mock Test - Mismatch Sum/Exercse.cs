@@ -15,7 +15,7 @@ namespace HackerRank.Prepare.Mock_Test___Mismatch_Sum
          *  2. STRING str2
          */
 
-        /* This solutin psed 10 tests i HackerRank butfailed the remanig 6 or 7 fr timeout */
+        /* This solutin psed 10 tests i HackerRank butfailed the remanig 6 or 7 for timeout */
         public static long CountDifferences_1(string str1, string str2)
         {
             int len = str1.Length;

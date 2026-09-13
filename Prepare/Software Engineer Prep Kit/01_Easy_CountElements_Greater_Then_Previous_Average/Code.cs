@@ -1,11 +1,10 @@
 ﻿using NUnit.Framework;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace HackerRank.Prepare.Software_Engineer_Prep_Kit._01_Easy_CountElements_Greater_Then_Previous_Average
 {
     class Result
     {
-        public static int CountResponseTimeRegressions_(List<int> responseTimes)
+        public static int CountResponseTimeRegressions(List<int> responseTimes)
         {
             int accumulator = 0;
             int counter = 0;
@@ -20,10 +19,7 @@ namespace HackerRank.Prepare.Software_Engineer_Prep_Kit._01_Easy_CountElements_G
             return counter;
         }
 
-        `accumulator > 0` is used to skip the first value.
-        another way can be using `.FirstOrDefault` and start the loop from 1.
-
-        public static int CountResponseTimeRegressions(List<int> responseTimes) =>
+        public static int CountResponseTimeRegressions_Aggregate(List<int> responseTimes) =>
             responseTimes.Aggregate(
                 (Sum: 0, Count: 0, Result: 0),
                 (acc, val) => (
