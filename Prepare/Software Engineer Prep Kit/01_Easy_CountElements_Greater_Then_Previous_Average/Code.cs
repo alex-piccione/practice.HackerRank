@@ -26,7 +26,7 @@ namespace HackerRank.Prepare.Software_Engineer_Prep_Kit._01_Easy_CountElements_G
 
         public static int CountResponseTimeRegressions(List<int> responseTimes)
         {
-
+            return 0;
         }
 
     }
