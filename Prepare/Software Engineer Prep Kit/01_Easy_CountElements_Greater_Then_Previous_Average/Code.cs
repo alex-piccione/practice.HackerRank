@@ -16,17 +16,20 @@ namespace HackerRank.Prepare.Software_Engineer_Prep_Kit._01_Easy_CountElements_G
 {
     class Result
     {
-
-        /*
-         * Complete the 'countResponseTimeRegressions' function below.
-         *
-         * The function is expected to return an INTEGER.
-         * The function accepts INTEGER_ARRAY responseTimes as parameter.
-         */
-
         public static int CountResponseTimeRegressions(List<int> responseTimes)
         {
-            return 0;
+            if (responseTimes.Count < 2) return 0;
+
+            int accumulator = responseTimes[0];
+            int counter = 0;
+            for (var i = 1; i < responseTimes.Count - 1; i++)
+            {
+                var avg = (accumulator + responseTimes[i]) / i;
+                if (responseTimes[i] > avg)
+                    counter++;
+            }
+
+            return counter;
         }
 
     }
