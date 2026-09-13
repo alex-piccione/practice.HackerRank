@@ -1,36 +1,43 @@
 ﻿using NUnit.Framework;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace HackerRank.Prepare.Software_Engineer_Prep_Kit._01_Easy_CountElements_Greater_Then_Previous_Average
 {
     class Result
     {
-        public static int CountResponseTimeRegressions(List<int> responseTimes)
+        public static int CountResponseTimeRegressions_(List<int> responseTimes)
         {
-            if (responseTimes.Count < 2) return 0;
-
-            int accumulator = responseTimes[0];
+            int accumulator = 0;
             int counter = 0;
-            for (var i = 1; i < responseTimes.Count - 1; i++)
-            {
-                var current = responseTimes[i];
-                Console.WriteLine($"current: {current}");
-                var avg = (accumulator + responseTimes[i]) / (i + 2);
-                Console.WriteLine($"avg: {avg}");
-                if (responseTimes[i] > avg)
-                    counter++;
 
+            for (var i = 0; i < responseTimes.Count; i++)
+            {
+                if (accumulator > 0 && responseTimes[i] > accumulator/i)
+                    counter++;
                 accumulator += responseTimes[i];
-                Console.WriteLine($"accumulator: {accumulator}");
             }
 
             return counter;
         }
-    }
+
+        `accumulator > 0` is used to skip the first value.
+        another way can be using `.FirstOrDefault` and start the loop from 1.
+
+        public static int CountResponseTimeRegressions(List<int> responseTimes) =>
+            responseTimes.Aggregate(
+                (Sum: 0, Count: 0, Result: 0),
+                (acc, val) => (
+                    Sum: acc.Sum + val,
+                    Count: acc.Count + 1,
+                Result: acc.Result + (acc.Sum > 0 && val > acc.Sum / acc.Count ? 1 : 0)),
+                acc => acc.Result);
+            }
 
     public class Tests {
         
         [TestCase("01_input.txt", "01_output.txt")]
         [TestCase("02_input.txt", "02_output.txt")]
+        [TestCase("03_input.txt", "03_output.txt")]
         public void Test(string inputFile, string outputFile)
         {
             string dir = AppDomain.CurrentDomain.BaseDirectory; // bin/Debug/net10.0/
