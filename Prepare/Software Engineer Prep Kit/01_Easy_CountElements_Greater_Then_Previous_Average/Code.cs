@@ -37,7 +37,7 @@ namespace HackerRank.Prepare.Software_Engineer_Prep_Kit._01_Easy_CountElements_G
         public void Test(string inputFile, string outputFile)
         {
             string dir = AppDomain.CurrentDomain.BaseDirectory; // bin/Debug/net10.0/
-            string testFolder = Path.Combine(dir, "Prepare\\Software Engineer Prep Kit\\01_Easy_CountElements_Greater_Then_Previous_Average\\Tests");
+            string testFolder = Path.Combine(dir, "Prepare/Software Engineer Prep Kit/01_Easy_CountElements_Greater_Then_Previous_Average/Tests");
             // Point Console.In to a file (e.g., "testcase_01.txt")
             //using var input = new StreamReader(Path.Combine(testFolder, inputFile));
             var lines = File.ReadAllLines(Path.Combine(testFolder, inputFile));
