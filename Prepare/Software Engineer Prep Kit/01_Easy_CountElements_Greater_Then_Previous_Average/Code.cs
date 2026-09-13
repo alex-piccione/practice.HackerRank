@@ -11,6 +11,7 @@ using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using System.Text;
 using System;
+using NUnit.Framework;
 
 namespace HackerRank.Prepare.Software_Engineer_Prep_Kit._01_Easy_CountElements_Greater_Then_Previous_Average
 {
@@ -31,26 +32,24 @@ namespace HackerRank.Prepare.Software_Engineer_Prep_Kit._01_Easy_CountElements_G
 
             return counter;
         }
-
     }
 
-    class Solution
-    {
-        public static void Main(string[] args)
+    public class Tests {
+        [TestCase("01_input.txt", "01_output.txt")]
+        public void Test(string inputFile, string outputFile)
         {
-            int responseTimesCount = Convert.ToInt32(Console.ReadLine()??"".Trim());
+            string dir = AppDomain.CurrentDomain.BaseDirectory; // bin/Debug/net10.0/
+            string testFolder = Path.Combine(dir, "Prepare\\Software Engineer Prep Kit\\01_Easy_CountElements_Greater_Then_Previous_Average\\Tests");
+            // Point Console.In to a file (e.g., "testcase_01.txt")
+            //using var input = new StreamReader(Path.Combine(testFolder, inputFile));
+            var lines = File.ReadAllLines(Path.Combine(testFolder, inputFile));
+            var responseTimes = lines.Skip(1).Select(int.Parse).ToList();
 
-            List<int> responseTimes = new List<int>();
+            var result = Result.CountResponseTimeRegressions(responseTimes);
 
-            for (int i = 0; i < responseTimesCount; i++)
-            {
-                int responseTimesItem = Convert.ToInt32(Console.ReadLine()??"".Trim());
-                responseTimes.Add(responseTimesItem);
-            }
+            var expectedResult = int.Parse(File.ReadAllText(Path.Combine(testFolder, outputFile)));
 
-            int result = Result.CountResponseTimeRegressions(responseTimes);
-
-            Console.WriteLine(result);
+            Assert.AreEqual(expectedResult, result);
         }
     }
 

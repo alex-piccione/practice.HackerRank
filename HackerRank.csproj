@@ -2,6 +2,18 @@
      <PropertyGroup>
        <RootNamespace>HackerRank</RootNamespace>
      </PropertyGroup>
+     <ItemGroup>
+       <None Remove="Prepare\Software Engineer Prep Kit\01_Easy_CountElements_Greater_Then_Previous_Average\Tests\01_input.txt" />
+       <None Remove="Prepare\Software Engineer Prep Kit\01_Easy_CountElements_Greater_Then_Previous_Average\Tests\01_output.txt" />
+     </ItemGroup>
+     <ItemGroup>
+       <Content Include="Prepare\Software Engineer Prep Kit\01_Easy_CountElements_Greater_Then_Previous_Average\Tests\01_input.txt">
+         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+       </Content>
+       <Content Include="Prepare\Software Engineer Prep Kit\01_Easy_CountElements_Greater_Then_Previous_Average\Tests\01_output.txt">
+         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+       </Content>
+     </ItemGroup>
 
      <ItemGroup>
        <PackageReference Include="Microsoft.NET.Test.Sdk" />
