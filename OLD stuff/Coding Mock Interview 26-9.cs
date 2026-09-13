@@ -7,26 +7,26 @@ namespace HackerRank.OLD_stuff
         /*
          Given two strings, str1, and str2, where str1 contains exactly one character more than str2, find the indices of the characters in str1 that can be removed to make str1 equal to str2. Return the array of indices in increasing order. If it is not possible, return the array \[-1\]. 
 
-**Note:** Use 0-based indexing.
+        **Note:** Use 0-based indexing.
 
-**Example**
+        **Example**
 
-str1 = "abdgggda"
+        str1 = "abdgggda"
 
-str2 = "abdggda"
+        str2 = "abdggda"
 
-Any "g" character at positions 3, 4, or 5 can be deleted to obtain str2. Return \[3, 4, 5\].
+        Any "g" character at positions 3, 4, or 5 can be deleted to obtain str2. Return \[3, 4, 5\].
          */
 
 
         /*
- * Complete the 'getRemovableIndices' function below.
- *
- * The function is expected to return an INTEGER_ARRAY.
- * The function accepts following parameters:
- *  1. STRING str1
- *  2. STRING str2
- */
+         * Complete the 'getRemovableIndices' function below.
+         *
+         * The function is expected to return an INTEGER_ARRAY.
+         * The function accepts following parameters:
+         *  1. STRING str1
+         *  2. STRING str2
+         */
 
         public static List<int> GetRemovableIndices_1(string str1, string str2)
         {
