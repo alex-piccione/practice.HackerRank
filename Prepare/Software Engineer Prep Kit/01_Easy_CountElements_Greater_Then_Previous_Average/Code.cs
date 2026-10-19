@@ -47,7 +47,7 @@ namespace HackerRank.Prepare.Software_Engineer_Prep_Kit._01_Easy_CountElements_G
 
             var expectedResult = int.Parse(File.ReadAllText(Path.Combine(testFolder, outputFile)));
 
-            Assert.AreEqual(expectedResult, result);
+            Assert.That(result, Is.EqualTo(expectedResult));
         }
     }
 
