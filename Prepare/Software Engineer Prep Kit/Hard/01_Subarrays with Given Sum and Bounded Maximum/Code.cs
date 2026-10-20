@@ -5,6 +5,7 @@ namespace HackerRank.Prepare.Software_Engineer_Prep_Kit.Hard._01_Subarrays_with_
 {
     internal class Code
     {
+        // Too slow
         public static long countSubarraysWithSumAndMaxAtMost_slow(List<int> nums, long k, long M)
         {
             long result = 0;
@@ -20,6 +21,35 @@ namespace HackerRank.Prepare.Software_Engineer_Prep_Kit.Hard._01_Subarrays_with_
                         break;
 
                     sum += current;
+                    if (sum == k)
+                        result++;
+                }
+            }
+
+            return result;
+        }
+
+        // Too slow
+        public static long countSubarraysWithSumAndMaxAtMost(List<int> nums, long k, long M)
+        {
+            long result = 0;
+
+            int sum;
+            for (var x = 0; x < nums.Count; x++)
+            {
+                if (nums[x] > M)
+                    continue;
+
+                if (nums[x] == k)
+                    result++;
+
+                sum = nums[x];
+                for (var y = x + 1; y < nums.Count; y++)
+                {
+                    if (nums[y] > M)
+                        break;
+
+                    sum += nums[y];
                     if (sum == k)
                         result++;
                 }
@@ -50,7 +80,7 @@ namespace HackerRank.Prepare.Software_Engineer_Prep_Kit.Hard._01_Subarrays_with_
             return result;
         }
 
-        public static long countSubarraysWithSumAndMaxAtMost(List<int> nums, long k, long M)
+        public static long countSubarraysWithSumAndMaxAtMost_Span(List<int> nums, long k, long M)
         {
             long result = 0;
 
@@ -74,7 +104,7 @@ namespace HackerRank.Prepare.Software_Engineer_Prep_Kit.Hard._01_Subarrays_with_
                     }
                 }
 
-                if (x == array.Length-1)
+                if (x == array.Length - 1)
                     result += processSpan(array[spanStart..], k);
             }
 
@@ -82,32 +112,53 @@ namespace HackerRank.Prepare.Software_Engineer_Prep_Kit.Hard._01_Subarrays_with_
         }
 
 
-        public static long countSubarraysWithSumAndMaxAtMost_2(List<int> nums, long k, long M)
+
+        public static long countSubarraysWithSumAndMaxAtMost_Slice(List<int> nums, long k, long M)
         {
             long result = 0;
 
-            int sum;
+            int processSlice(int start, int end)
+            {
+                if (start == end) return nums[start] == k ? 1 : 0;
+
+                int result = 0;
+
+                for (var x = start; x <= end; x++)
+                {
+                    int sum = 0;
+                    for (var y = x; y <= end; y++)
+                    {
+                        var current = nums[y];
+
+                        sum += current;
+                        if (sum == k)
+                            result++;
+                    }
+                }
+
+                return result;
+            }
+
+            int spanStart = 0;
             for (var x = 0; x < nums.Count; x++)
             {
                 if (nums[x] > M)
-                    continue;
-
-                if (nums[x] == k)
-                    result++;
-
-                sum = nums[x];
-                for (var y = x + 1; y < nums.Count; y++)
                 {
-                    if (nums[y] > M)
-                        break;
+                    if (x == spanStart)
+                    {
+                        spanStart++;
+                        continue;
+                    }
 
-                    sum += nums[y];
-                    if (sum == k)
-                        result++;
-
-                    //if (sum > M)
-                    //  continue;
+                    if (spanStart <= (x - 1))
+                    {
+                        result += processSlice(spanStart, x-1);
+                        spanStart = x + 1;
+                    }
                 }
+
+                if (x == nums.Count - 1)
+                    result += processSlice(spanStart, nums.Count - 1);
             }
 
             return result;
@@ -122,6 +173,26 @@ namespace HackerRank.Prepare.Software_Engineer_Prep_Kit.Hard._01_Subarrays_with_
         public void Test(int[] nums, long k, long m, long expectedResult)
         {
             var result = Code.countSubarraysWithSumAndMaxAtMost([.. nums], k, m);
+
+            Assert.That(result, Is.EqualTo(expectedResult));
+        }
+
+        [TestCase(new[] { 2, -1, 2, 1, -2, 3 }, 3, 2, 2)]
+        [TestCase(new[] { 5 }, 5, 5, 1)]
+        [TestCase(new[] { 1, 2, -1, 1 }, 3, 2, 2)]
+        public void Test_Span(int[] nums, long k, long m, long expectedResult)
+        {
+            var result = Code.countSubarraysWithSumAndMaxAtMost_Span([.. nums], k, m);
+
+            Assert.That(result, Is.EqualTo(expectedResult));
+        }
+
+        [TestCase(new[] { 2, -1, 2, 1, -2, 3 }, 3, 2, 2)]
+        [TestCase(new[] { 5 }, 5, 5, 1)]
+        [TestCase(new[] { 1, 2, -1, 1 }, 3, 2, 2)]
+        public void Test_Slice(int[] nums, long k, long m, long expectedResult)
+        {
+            var result = Code.countSubarraysWithSumAndMaxAtMost_Slice([.. nums], k, m);
 
             Assert.That(result, Is.EqualTo(expectedResult));
         }
