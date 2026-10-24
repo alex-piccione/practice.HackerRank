@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using System.Collections.Concurrent;
 using System.Runtime.InteropServices;
 
 namespace HackerRank.Prepare.Software_Engineer_Prep_Kit.Hard._01_Subarrays_with_Given_Sum_and_Bounded_Maximum
@@ -113,44 +112,55 @@ namespace HackerRank.Prepare.Software_Engineer_Prep_Kit.Hard._01_Subarrays_with_
         }
 
 
-
         public static long countSubarraysWithSumAndMaxAtMost_Slice(List<int> nums, long k, long M)
         {
-            //long result = 0;
-
-            var results = new ConcurrentBag<int>();
-
-            void processSlice(int start, int end)
+            int processSlice(int start, int end)
             {
-                if (start == end)
-                {
-                    results.Add(nums[start] == k ? 1 : 0);
-                }
-                else
-                {
-                    int result = 0;
+                int result = 0;
 
-                    for (var x = start; x <= end; x++)
+                for (var x = start; x <= end; x++)
+                {
+                    int sum = 0;
+                    for (var y = x; y <= end; y++)
                     {
-                        int sum = 0;
-                        for (var y = x; y <= end; y++)
-                        {
-                            var current = nums[y];
+                        var current = nums[y];
 
-                            sum += current;
-                            if (sum == k)
-                                result++;
-                        }
+                        sum += current;
+                        if (sum == k)
+                            result++;
                     }
-
-                    results.Add(result);
                 }
+
+                return result;
             }
 
+            //int processSlice_2(int start, int end) {
+                
+            //}
+
             int spanStart = 0;
-            var tasks = new List<Task>();
+            var tasks = new List<Task<int>>();
             for (var x = 0; x < nums.Count; x++)
             {
+                if (nums[x] > M || x == nums.Count-1) {
+                    if(x > spanStart || x == nums.Count - 1)
+                    {
+                        int start = spanStart, end = x-1;
+                        if (x == nums.Count - 1) // last item
+                            end = nums.Count - 1; 
+                        tasks.Add(Task.Run(() => processSlice(start, end)));
+                    }
+                    spanStart = x + 1;
+                    /*
+                    if (x == nums.Count - 1)
+                    {
+                        int start = spanStart;
+                        tasks.Add(Task.Run(() => processSlice(start, x)));
+                    }*/
+                }
+
+                // old
+                /*
                 if (nums[x] > M)
                 {
                     if (x == spanStart)
@@ -161,7 +171,6 @@ namespace HackerRank.Prepare.Software_Engineer_Prep_Kit.Hard._01_Subarrays_with_
 
                     if (spanStart <= (x - 1))
                     {
-                        //result += tasks.Add( ;
                         int start = spanStart;
                         int end = x-1;
                         tasks.Add(Task.Run(() => processSlice(start, end)));
@@ -171,12 +180,14 @@ namespace HackerRank.Prepare.Software_Engineer_Prep_Kit.Hard._01_Subarrays_with_
 
                 if (x == nums.Count - 1)
                     tasks.Add(Task.Run(() => processSlice(spanStart, nums.Count - 1)));
-                    //result += await processSlice(spanStart, nums.Count - 1);    
+                */
             }
 
             Task.WaitAll(tasks.ToArray());
 
-            return results.Sum();
+            long total = 0;
+            tasks.ForEach(t => total += t.Result);
+            return total;
         }
 
         static long CountSegment(List<int> nums, int start, int endExclusive, long k)
