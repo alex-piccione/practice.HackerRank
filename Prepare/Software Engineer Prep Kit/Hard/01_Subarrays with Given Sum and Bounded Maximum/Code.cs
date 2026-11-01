@@ -1,11 +1,12 @@
 ﻿using NUnit.Framework;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 namespace HackerRank.Prepare.Software_Engineer_Prep_Kit.Hard._01_Subarrays_with_Given_Sum_and_Bounded_Maximum
 {
     internal class Code
     {
-        // Too slow
+        // Too slow - O(n^2)
         public static long countSubarraysWithSumAndMaxAtMost_slow(List<int> nums, long k, long M)
         {
             long result = 0;
@@ -29,247 +30,77 @@ namespace HackerRank.Prepare.Software_Engineer_Prep_Kit.Hard._01_Subarrays_with_
             return result;
         }
 
-        // Too slow
+        // Use a Dictionary to store the previous parts sum accumulators from the position 0 to the current one.
+        // That allows to quickly check if there is a previous subarray that the sum matches the target value.
+        // Since the values can also be negative it is possible there are multiple valid subarrays (so a simple HashSet is not enough).
         public static long countSubarraysWithSumAndMaxAtMost(List<int> nums, long k, long M)
         {
-            long result = 0;
+            long result = 0; // count of subarrays
 
-            int sum;
-            for (var x = 0; x < nums.Count; x++)
-            {
-                if (nums[x] > M)
-                    continue;
+            var numsSpan = nums.ToArray().AsSpan();
 
-                if (nums[x] == k)
-                    result++;
-
-                sum = nums[x];
-                for (var y = x + 1; y < nums.Count; y++)
-                {
-                    if (nums[y] > M)
-                        break;
-
-                    sum += nums[y];
-                    if (sum == k)
-                        result++;
-                }
-            }
-
-            return result;
-        }
-
-        internal static int processSpan(ReadOnlySpan<int> nums, long k)
-        {
-            if (nums.Length == 1) return nums[0] == k ? 1 : 0;
-
-            int result = 0;
-
-            for (var x = 0; x < nums.Length; x++)
-            {
-                int sum = 0;
-                for (var y = x; y < nums.Length; y++)
-                {
-                    var current = nums[y];
-
-                    sum += current;
-                    if (sum == k)
-                        result++;
-                }
-            }
-
-            return result;
-        }
-
-        public static long countSubarraysWithSumAndMaxAtMost_Span(List<int> nums, long k, long M)
-        {
-            long result = 0;
-
-            var array = CollectionsMarshal.AsSpan(nums);
-
-            int spanStart = 0;
-            for (var x = 0; x < array.Length; x++)
-            {
-                if (nums[x] > M)
-                {
-                    if (x == spanStart)
-                    {
-                        spanStart++;
-                        continue;
-                    }
-
-                    if (spanStart <= (x - 1))
-                    {
-                        result += processSpan(array[spanStart..x], k);
-                        spanStart = x + 1;
-                    }
-                }
-
-                if (x == array.Length - 1)
-                    result += processSpan(array[spanStart..], k);
-            }
-
-            return result;
-        }
-
-
-        public static long countSubarraysWithSumAndMaxAtMost_Slice(List<int> nums, long k, long M)
-        {
-            int processSlice(int start, int end)
-            {
-                int result = 0;
-
-                for (var x = start; x <= end; x++)
-                {
-                    int sum = 0;
-                    for (var y = x; y <= end; y++)
-                    {
-                        var current = nums[y];
-
-                        sum += current;
-                        if (sum == k)
-                            result++;
-                    }
-                }
-
-                return result;
-            }
-
-            //int processSlice_2(int start, int end) {
-                
-            //}
-
-            int spanStart = 0;
-            var tasks = new List<Task<int>>();
-            for (var x = 0; x < nums.Count; x++)
-            {
-                if (nums[x] > M || x == nums.Count-1) {
-                    if(x > spanStart || x == nums.Count - 1)
-                    {
-                        int start = spanStart, end = x-1;
-                        if (x == nums.Count - 1) // last item
-                            end = nums.Count - 1; 
-                        tasks.Add(Task.Run(() => processSlice(start, end)));
-                    }
-                    spanStart = x + 1;
-                    /*
-                    if (x == nums.Count - 1)
-                    {
-                        int start = spanStart;
-                        tasks.Add(Task.Run(() => processSlice(start, x)));
-                    }*/
-                }
-
-                // old
-                /*
-                if (nums[x] > M)
-                {
-                    if (x == spanStart)
-                    {
-                        spanStart++;
-                        continue;
-                    }
-
-                    if (spanStart <= (x - 1))
-                    {
-                        int start = spanStart;
-                        int end = x-1;
-                        tasks.Add(Task.Run(() => processSlice(start, end)));
-                        spanStart = x + 1;
-                    }
-                }
-
-                if (x == nums.Count - 1)
-                    tasks.Add(Task.Run(() => processSlice(spanStart, nums.Count - 1)));
-                */
-            }
-
-            Task.WaitAll(tasks.ToArray());
-
-            long total = 0;
-            tasks.ForEach(t => total += t.Result);
-            return total;
-        }
-
-        static long CountSegment(List<int> nums, int start, int endExclusive, long k)
-        {
-            long result = 0, sum = 0;
-            //var seen = new Dictionary<long, int> { [0] = 1 };
-            var seen = new Dictionary<long, int> { { 0L, 1 } };
-
-            for (int i = start; i < endExclusive; i++)
-            {
-                sum += nums[i];
-                if (seen.TryGetValue(sum - k, out var c)) result += c;
-                seen[sum] = seen.GetValueOrDefault(sum) + 1;
-            }
-            return result;
-        }
-
-        public static long countSubarraysWithSumAndMaxAtMost_Sliding(List<int> nums, long k, long M)
-        {
-            var tasks = new List<Task<long>>();
             int start = 0;
-
-            for (int i = 0; i <= nums.Count; i++)
+            for (var i=0; i < nums.Count; i++)
             {
-                if (i == nums.Count || nums[i] > M)          // barrier or end of list
+                var value = nums[i];
+                if (value > M)
                 {
-                    if (i > start)
-                    {
-                        int s = start, e = i;                // copies, so the lambda doesn't see later changes
-                        tasks.Add(Task.Run(() => CountSegment(nums, s, e, k)));
-                    }
+                    result += CountSubarrays(numsSpan[start..i], k);
                     start = i + 1;
+                    continue;
                 }
             }
 
-            Task.WaitAll(tasks.ToArray());
+            if (start < nums.Count)
+                result += CountSubarrays(numsSpan[start..], k);
 
-            long total = 0;
-            foreach (var t in tasks) total += t.Result;
-            return total;
+            return result;
+        }
+
+        internal static long CountSubarrays(ReadOnlySpan<int> nums, long k)
+        {
+            long result = 0; // count of subarrays
+            int accumulator = 0;
+
+            var partialSums = new Dictionary<long, int> { [0] = 1 };
+
+            foreach (var x in nums)
+            {
+                accumulator += x;
+
+                var match = accumulator - k;
+                if (partialSums.TryGetValue(match, out int matchValue))
+                    result += matchValue;
+
+                if (partialSums.TryGetValue(accumulator, out int value))
+                    partialSums[accumulator] = value + 1;
+                else
+                    partialSums.Add(accumulator, 1);
+            }
+
+            return result;
         }
     }
 
     public class Tests
     {
+        [TestCase(new[] { 1, 1, 1, 1 }, 3, 2, 2)]
+        [TestCase(new[] { 1, 3, 1, 1, 1 }, 3, 2, 1)]
+        [TestCase(new[] { 2, 1, -1, 1 }, 3, 2, 2)]
         [TestCase(new[] { 2, -1, 2, 1, -2, 3 }, 3, 2, 2)]
         [TestCase(new[] { 5 }, 5, 5, 1)]
+        [TestCase(new[] { 5, 5 }, 5, 5, 2)]
         [TestCase(new[] { 1, 2, -1, 1 }, 3, 2, 2)]
+        [TestCase(new[] { 1 }, 1, 1, 1)]
+        [TestCase(new[] { 1, 2 }, 2, 1, 0)]
+        [TestCase(new[] { 1, 2 }, 2, 2, 1)]
+        [TestCase(new[] { 3, 2 }, 5, 3, 1)]
+        [TestCase(new[] { -1, -1 }, -1, -1, 2)]
+        [TestCase(new[] { -1, -1 }, -2, -1, 1)]
+        [TestCase(new[] { 0, 0, 0 }, 0, 0, 6)]
         public void Test(int[] nums, long k, long m, long expectedResult)
         {
             var result = Code.countSubarraysWithSumAndMaxAtMost([.. nums], k, m);
-
-            Assert.That(result, Is.EqualTo(expectedResult));
-        }
-
-        [TestCase(new[] { 2, -1, 2, 1, -2, 3 }, 3, 2, 2)]
-        [TestCase(new[] { 5 }, 5, 5, 1)]
-        [TestCase(new[] { 1, 2, -1, 1 }, 3, 2, 2)]
-        public void Test_Span(int[] nums, long k, long m, long expectedResult)
-        {
-            var result = Code.countSubarraysWithSumAndMaxAtMost_Span([.. nums], k, m);
-
-            Assert.That(result, Is.EqualTo(expectedResult));
-        }
-
-        [TestCase(new[] { 2, -1, 2, 1, -2, 3 }, 3, 2, 2)]
-        [TestCase(new[] { 5 }, 5, 5, 1)]
-        [TestCase(new[] { 1, 2, -1, 1 }, 3, 2, 2)]
-        public void Test_Slice(int[] nums, long k, long m, long expectedResult)
-        {
-            var result = Code.countSubarraysWithSumAndMaxAtMost_Slice([.. nums], k, m);
-
-            Assert.That(result, Is.EqualTo(expectedResult));
-        }
-
-        [TestCase(new[] { 2, -1, 2, 1, -2, 3 }, 3, 2, 2)]
-        [TestCase(new[] { 5 }, 5, 5, 1)]
-        [TestCase(new[] { 1, 2, -1, 1 }, 3, 2, 2)]
-        public void Test_Sliding(int[] nums, long k, long m, long expectedResult)
-        {
-            var result = Code.countSubarraysWithSumAndMaxAtMost_Sliding([.. nums], k, m);
-
             Assert.That(result, Is.EqualTo(expectedResult));
         }
     }
