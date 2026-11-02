@@ -16,8 +16,7 @@ namespace HackerRank.Prepare.Software_Engineer_Prep_Kit.Easy._03_One_Pass_Remova
             }
 
             // invalid k
-            if (k >= count)
-                return head;
+            if (k >= count) return head;
 
             // k points to current head
             if (k == count - 1)
