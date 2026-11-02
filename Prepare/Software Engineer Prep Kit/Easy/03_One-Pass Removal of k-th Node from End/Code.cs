@@ -3,8 +3,6 @@ namespace HackerRank.Prepare.Software_Engineer_Prep_Kit.Easy._03_One_Pass_Remova
 {
     class Result
     {
-        const int MAX = 1000; // max number of items
-
         public static SinglyLinkedListNode removeKthNodeFromEnd(SinglyLinkedListNode head, int k)
         {
             if (head is null) return null;
