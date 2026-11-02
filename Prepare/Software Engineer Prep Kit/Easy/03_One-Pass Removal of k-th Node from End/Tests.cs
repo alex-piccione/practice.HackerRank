@@ -8,6 +8,7 @@ namespace HackerRank.Prepare.Software_Engineer_Prep_Kit.Easy._03_One_Pass_Remova
         [TestCase(new int[] { 5,1 }, 1, 1)]
         [TestCase(new int[] { 5 }, 1, 5)]
         [TestCase(new int[] { 1,2 }, 0, 1)]
+        [TestCase(new int[] { 1,2,3 }, 3, 1)]
         public void Test_not_null(int[] input, int k, int expectedHead)
         {
             SinglyLinkedListNode head = SinglyLinkedListNode.CreateFromElements(input);

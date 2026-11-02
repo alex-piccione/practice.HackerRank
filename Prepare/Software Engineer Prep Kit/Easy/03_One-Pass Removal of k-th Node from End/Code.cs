@@ -3,13 +3,48 @@ namespace HackerRank.Prepare.Software_Engineer_Prep_Kit.Easy._03_One_Pass_Remova
 {
     class Result
     {
+        const int MAX = 1000; // max number of items
+
         public static SinglyLinkedListNode removeKthNodeFromEnd(SinglyLinkedListNode head, int k)
         {
-            return new SinglyLinkedListNode(6);
+            if (head is null) return null;
 
-            //return null;
+            var next = head.next;
+            int count = 1;
+            while(next != null)
+            {
+                count++;
+                next = next.next;
+            }
+
+            // invalid k
+            if (k >= count)
+                return head;
+
+            // k points to current head
+            if (k == count - 1)
+            {
+                if (count == 1) return null; // removed the only value
+                return head.next;
+            }
+
+            // same head but needs to truncate at right position
+            var lastIndex = count - k - 2;
+            int index = 0;
+            next = head;
+            while (next != null)
+            {
+                if (index == lastIndex)
+                {
+                    next.next = null; // truncate
+                    break;
+                }
+                next = next.next;
+                index++;
+            }
+
+            return head;
         }
-
     }
 
     class SinglyLinkedListNode
