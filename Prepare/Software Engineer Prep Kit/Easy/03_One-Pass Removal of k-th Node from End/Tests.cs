@@ -5,6 +5,7 @@ namespace HackerRank.Prepare.Software_Engineer_Prep_Kit.Easy._03_One_Pass_Remova
     internal class Tests
     {
         [TestCase(new int[] { 5, 6, 7, 8 }, 3, new int[] { 6, 7, 8 })]
+        [TestCase(new int[] { 5, 6, 7, 8 }, 2, new int[] { 5, 7, 8 })]
         [TestCase(new int[] { 5, 1 }, 1, new int[] {1})]
         [TestCase(new int[] { 5 }, 1, new int[] { 5 })]
         [TestCase(new int[] { 1, 2 }, 0, new int[] { 1 })]
@@ -28,6 +29,9 @@ namespace HackerRank.Prepare.Software_Engineer_Prep_Kit.Easy._03_One_Pass_Remova
                 expectedNext = expectedNext.next;
                 resultNext = resultNext.next;
             }
+
+            // check there are not extra elements
+            Assert.That(resultNext, Is.Null);
         }
 
         [TestCase(new int[] {}, 3)]
