@@ -25,15 +25,15 @@ namespace HackerRank.Prepare.Software_Engineer_Prep_Kit.Easy._03_One_Pass_Remova
                 return head.next;
             }
 
-            // same head but needs to truncate at right position
-            var lastIndex = count - k - 2;
+            // same head but needs to remove the element
+            var indexOfRemoved = count - k - 2;
             int index = 0;
             next = head;
             while (next != null)
             {
-                if (index == lastIndex)
+                if (index == indexOfRemoved)
                 {
-                    next.next = null; // truncate
+                    next.next = next.next.next; // skip the removed element
                     break;
                 }
                 next = next.next;
