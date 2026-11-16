@@ -1,6 +1,4 @@
-﻿using NUnit.Framework;
-
-namespace HackerRank.SkyScanner
+﻿namespace HackerRank.SkyScanner
 {
     public class Solution
     {
@@ -50,7 +48,7 @@ namespace HackerRank.SkyScanner
             return managers;
         }
 
-        private static string? GetManager(string employee, List<Relation> relations)
+        private static string GetManager(string employee, List<Relation> relations)
             => relations.FirstOrDefault(r => r.Employee == employee)?.Manager;
 
 
